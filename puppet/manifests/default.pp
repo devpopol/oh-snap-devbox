@@ -14,16 +14,6 @@ class { 'apt_get_update':
   stage => preinstall
 }
 
-class install_sqlite3 {
-  package { 'sqlite3':
-    ensure => installed;
-  }
-
-  package { 'libsqlite3-dev':
-    ensure => installed;
-  }
-}
-class { 'install_sqlite3': }
 
 class install_mysql {
   class { 'mysql': }
@@ -54,27 +44,27 @@ class install_mysql {
 }
 class { 'install_mysql': }
 
-class install_postgres {
-  class { 'postgresql': }
-
-  class { 'postgresql::server': }
-
-  pg_database { $ar_databases:
-    ensure   => present,
-    encoding => 'UTF8',
-    require  => Class['postgresql::server']
-  }
-
-  pg_user { 'rails':
-    ensure  => present,
-    require => Class['postgresql::server'] 
-  }
-
-  package { 'libpq-dev':
-    ensure => installed
-  }
-}
-class { 'install_postgres': }
+# class install_postgres {
+#   class { 'postgresql': }
+# 
+#   class { 'postgresql::server': }
+# 
+#   pg_database { $ar_databases:
+#     ensure   => present,
+#     encoding => 'UTF8',
+#     require  => Class['postgresql::server']
+#   }
+# 
+#   pg_user { 'rails':
+#     ensure  => present,
+#     require => Class['postgresql::server'] 
+#   }
+# 
+#   package { 'libpq-dev':
+#     ensure => installed
+#   }
+# }
+# class { 'install_postgres': }
 
 class install_core_packages {
   package { ['build-essential', 'git-core']:
@@ -109,4 +99,11 @@ class install_nokogiri_dependencies {
 }
 class { 'install_nokogiri_dependencies': }
 
+class sphinx { 
+  package { 'sphinxsearch': 
+  ensure => installed
+  }
+}
+
 class { 'memcached': }
+class { 'sphinx': }
